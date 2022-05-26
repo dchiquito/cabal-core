@@ -29,9 +29,6 @@ var MODERATION_INFO = 'my'
 var ARCHIVES = 'a' 
 var PRIVATE_MESSAGES = 'p'
 
-module.exports = Cabal
-module.exports.databaseVersion = DATABASE_VERSION
-
 /**
  * Create a new cabal. This is the object handling all
  * local nickname -> mesh interactions for a single user.
@@ -366,3 +363,6 @@ function sanitizeKey (key) {
 }
 
 function noop () {}
+
+module.exports = Cabal
+module.exports.databaseVersion = DATABASE_VERSION
