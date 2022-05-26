@@ -16,6 +16,7 @@ var createModerationView = require('./views/moderation')
 var createArchivingView = require('./views/channel-archiving')
 var createPrivateMessagesView = require('./views/private-messages')
 var swarm = require('./swarm')
+const { EventEmitter } = require('stream')
 
 var DATABASE_VERSION = 1
 var CHANNELS = 'c'
@@ -35,11 +36,22 @@ module.exports.databaseVersion = DATABASE_VERSION
  * Create a new cabal. This is the object handling all
  * local nickname -> mesh interactions for a single user.
  * @constructor
- * @param {string|function} storage - A hyperdb compatible storage function, or a string representing the local data path.
- * @param {string|Buffer} key - a hypercore public key
+ * @param {string | Function} storage - A hyperdb compatible storage function, or a string representing the local data path.
+ * @param {string | Buffer} key - a hypercore public key
+ * @param {{
+ *  maxFeeds?: any;
+ *  modKeys?: any;
+ *  adminKeys?: any;
+ *  preferredPort?: any;
+ *  db?: any;
+ * }} opts
  */
-function Cabal (storage, key, opts) {
-  if (!(this instanceof Cabal)) return new Cabal(storage, key, opts)
+// function Cabal (storage, key, opts) {
+//   if (!(this instanceof Cabal)) return new Cabal(storage, key, opts)
+// }
+class Cabal extends EventEmitter {
+  constructor (storage, key, opts) {
+    super()
   if (!opts) opts = {}
   events.EventEmitter.call(this)
   this.setMaxListeners(Infinity)
@@ -154,8 +166,9 @@ function Cabal (storage, key, opts) {
   this.moderation = this.kcore.api.moderation
   this.archives = this.kcore.api.archives
 }
+}
 
-inherits(Cabal, events.EventEmitter)
+// inherits(Cabal, events.EventEmitter)
 Cabal.prototype.getDatabaseVersion = function (cb) {
   if (!cb) cb = noop
   process.nextTick(cb, DATABASE_VERSION)
