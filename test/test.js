@@ -6,7 +6,7 @@ var pump = require('pump')
 var crypto = require('hypercore-crypto')
 
 test('create a cabal + channel', function (t) {
-  var cabal = Cabal(ram)
+  var cabal = new Cabal(ram)
   cabal.ready(function () {
     var msg = {
       type: 'chat/text',
@@ -35,7 +35,7 @@ test('create a cabal + channel', function (t) {
 test('reading back multiple messages', function (t) {
   t.plan(9)
 
-  var cabal = Cabal(ram)
+  var cabal = new Cabal(ram)
 
   var pending = 3
 
@@ -92,7 +92,7 @@ test('reading back multiple messages', function (t) {
 })
 
 test('listening for live messages', function (t) {
-  var cabal = Cabal(ram)
+  var cabal = new Cabal(ram)
 
   var count = 0
   cabal.messages.events.on('general', function (msg) {
@@ -139,7 +139,7 @@ test('local replication', function (t) {
   var sharedKey
 
   function create (id, key, cb) {
-    var cabal = Cabal(ram, key)
+    var cabal = new Cabal(ram, key)
     cabal.ready(function () {
       var msg = {
         type: 'chat/text',
@@ -194,7 +194,7 @@ test.skip('swarm network replication', function (t) {
   var key
 
   function create (id, cb) {
-    var cabal = Cabal(ram, key)
+    var cabal = new Cabal(ram, key)
     cabal.ready(function () {
       var msg = {
         type: 'chat/text',
@@ -278,7 +278,7 @@ function syncNetwork (a, b, cb) {
 }
 
 test('channel membership', function (t) {
-  var cabal = Cabal(ram)
+  var cabal = new Cabal(ram)
 
   cabal.ready(function () {
     cabal.getLocalKey((err, lkey) => {
@@ -322,7 +322,7 @@ test('channel membership', function (t) {
 })
 
 test('join two channels then leave one', function (t) {
-  var cabal = Cabal(ram)
+  var cabal = new Cabal(ram)
 
   var p1 = new Promise((res, rej) => {
     cabal.publish({
@@ -379,7 +379,7 @@ test('multiple channel participants', function (t) {
   var sharedKey
 
   function create (id, cb) {
-    var cabal = Cabal(ram, sharedKey ? sharedKey : null)
+    var cabal = new Cabal(ram, sharedKey ? sharedKey : null)
     cabal.ready(function () {
       if (!sharedKey) sharedKey = cabal.key
       var msg = {
