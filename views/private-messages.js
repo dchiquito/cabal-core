@@ -6,12 +6,13 @@ const through = require('through2')
 const readonly = require('read-only-stream')
 const xtend = require('xtend')
 const collect = require('collect-stream')
+const LevelUp = require('levelup').LevelUp
 
 /**
  * Create a new materialized view for private messages.
  *
  * @param {{public,private}} keypair - The keypair of the local user.
- * @param {LevelUP} lvl - a LevelUP instance.
+ * @param {LevelUp} lvl - a LevelUP instance.
 **/
 module.exports = function (keypair, lvl) {
   const events = new EventEmitter()

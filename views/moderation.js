@@ -157,6 +157,7 @@ module.exports = function (cabal, authDb, infoDb) {
           delete row.group
           next(null, row)
         })
+        // @ts-ignore
         this.ready(function () {
           var r = auth.list(opts)
           pump(r, out)
@@ -252,6 +253,7 @@ module.exports = function (cabal, authDb, infoDb) {
   function wrap (f) {
     return function () {
       var args = arguments
+      // @ts-ignore
       var self = this
       if (queue !== null) {
         return queue.push(function () { f.apply(self, args) })
@@ -263,6 +265,7 @@ module.exports = function (cabal, authDb, infoDb) {
   function wrapReadStream (f) {
     return function () {
       var args = arguments
+      // @ts-ignore
       var self = this
       if (queue !== null) {
         var stream = duplexify.obj()
