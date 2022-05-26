@@ -62,7 +62,8 @@ class Cabal extends EventEmitter {
       try { var obj = JSON.parse(str) } catch (err) { return {} }
       return obj
     },
-    buffer: true
+    buffer: true,
+    type: undefined,
   }
 
   this.maxFeeds = opts.maxFeeds
@@ -94,6 +95,7 @@ class Cabal extends EventEmitter {
     })
   })
 
+  this._swarm = null
   // views
   this.kcore.use('memberships', createMembershipsView(
     sublevel(this.db, MEMBERSHIPS, { valueEncoding: json })))
@@ -212,7 +214,7 @@ Cabal.prototype.publish = function (message, opts, cb) {
 /**
  * Publish a message to your feed, encrypted to a specific recipient's key.
  * @param {Object} message - The message to publish.
- * @param {String|Buffer[32]) recipientKey - A recipient's public key to encrypt the message to.
+ * @param {string|Buffer} recipientKey - A recipient's public key to encrypt the message to.
  * @param {function} cb - When the message has been successfully written.
  */
 Cabal.prototype.publishPrivate = function (message, recipientKey, cb) {
@@ -349,6 +351,9 @@ function generateKeyHex () {
   return crypto.keyPair().publicKey.toString('hex')
 }
 
+/**
+ * @param {string | Buffer | any[]} key
+ */
 function isHypercoreKey (key) {
   if (typeof key === 'string') return /^[0-9A-Fa-f]{64}$/.test(key)
   else if (Buffer.isBuffer(key)) return key.length === 32
@@ -356,6 +361,9 @@ function isHypercoreKey (key) {
 module.exports.isHypercoreKey = isHypercoreKey
 
 // Ensures 'key' is a hex string
+/**
+ * @param {string} key
+ */
 function sanitizeKey (key) {
   const match = key.match(/^cabal:\/\/([0-9A-Fa-f]{64})/)
   if (match === null) return undefined
